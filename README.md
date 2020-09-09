@@ -1,5 +1,31 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Dependencies and Development Dependencies
+
+Further more, it already provides a set of sensible default of pre-installed depdenencies:
+
+- `@types/jest`
+- `@types/node`
+- `@types/react`
+- `@types/react-dom`
+- `antd`
+- `recoil`
+- `typescript`
+
+### Development Dependencies
+
+- `eslint-config-prettier`
+- `eslint-plugin-prettier`
+- `husky`
+- `lint-staged`
+- `prettier`
+
+## ESLint
+
+## Editors
+
+### VSCode
+
 ## Available Scripts
 
 In the project directory, you can run:
