@@ -1,26 +1,14 @@
 import React, { useState } from "react";
-import { Divider, Table } from "antd";
-import { todoListState } from "./model";
+import { Divider } from "antd";
 import {
-	atom,
-	selector,
-	useRecoilState,
-	useSetRecoilState,
-	useRecoilValue,
-} from "recoil";
+	filteredTodoListState,
+	todoListState,
+	todoListFilterState,
+	todoListStatsState,
+} from "./model";
+import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil";
 import { replaceItemAtIndex, removeItemAtIndex, getId } from "./utils";
 
-interface ColumnDescriptor {
-	name: string;
-	dataIndex: string;
-}
-
-const columns: ColumnDescriptor[] = [{ name: "Text", dataIndex: "text" }];
-
-/**
- *
- * @param param0
- */
 const TodoItem = ({ item }: { item: any }) => {
 	const [todoList, setTodoList] = useRecoilState(todoListState);
 	const index = todoList.findIndex((listItem: any) => listItem === item);
@@ -88,14 +76,56 @@ const TodoItemCreator = () => {
 	);
 };
 
-const TodoList = () => {
-	const todoList = useRecoilValue(todoListState);
+const TodoListFilters = () => {
+	const [filter, setFilter] = useRecoilState(todoListFilterState);
+
+	const updateFilter = ({ target: { value } }: { target: any }) => {
+		setFilter(value);
+	};
 
 	return (
 		<>
-			{/* <TodoListStats /> */}
-			{/* <TodoListFilters /> */}
+			Filter:
+			<select value={filter} onChange={updateFilter}>
+				<option value="Show All">All</option>
+				<option value="Show Completed">Completed</option>
+				<option value="Show Uncompleted">Uncompleted</option>
+			</select>
+		</>
+	);
+};
+
+const TodoListStats = () => {
+	const {
+		totalNum,
+		totalCompletedNum,
+		totalUncompletedNum,
+		percentCompleted,
+	} = useRecoilValue(todoListStatsState);
+
+	const formattedPercentCompleted = Math.round(percentCompleted * 100);
+
+	return (
+		<ul>
+			<li>Total items: {totalNum}</li>
+			<li>Items completed: {totalCompletedNum}</li>
+			<li>Items not completed: {totalUncompletedNum}</li>
+			<li>Percent completed: {formattedPercentCompleted}</li>
+		</ul>
+	);
+};
+
+const TodoList = () => {
+	const todoList = useRecoilValue(filteredTodoListState);
+
+	return (
+		<>
+			<TodoListStats />
+			<Divider />
+			<TodoListFilters />
+			<Divider />
 			<TodoItemCreator />
+			<Divider />
 
 			{todoList.map((todoItem: any) => (
 				<TodoItem key={todoItem.id} item={todoItem} />
@@ -104,4 +134,4 @@ const TodoList = () => {
 	);
 };
 
-export { TodoItem, TodoList };
+export { TodoList };
